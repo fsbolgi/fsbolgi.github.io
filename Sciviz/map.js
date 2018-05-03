@@ -1,5 +1,5 @@
-var width = 500; // width and height of the map
-var svg_map = d3.select(".svg_map_img"); // select correct svg
+var width = 600; // width and height of the map
+var svg_map = d3.select(".map_svg"); // select correct svg
 
 d3.json("Maps/regTopo.json", create_map); // read topojson file and calls a function
 
@@ -33,10 +33,10 @@ function create_map (error, json_reg) {
                 .text(curr_region.properties.NOME_REG)
                 .attr("transform", "translate(" + path.centroid(curr_region)[0]+", " + (path.bounds(curr_region)[0][1]-5)+ ")")
                 .attr("dy", ".35em")
-                .attr("class", "regions-label " + curr_region.properties.NOME_REG);
+                .attr("class", "regions_label " + curr_region.properties.NOME_REG);
         })
         // what to do when hovering out of a region
-        .on("mouseout", function(){ d3.selectAll("text").remove(); })
+        .on("mouseout", function(){ svg_map.selectAll("text").remove(); })
         // what to do when clicking on a region
         .on("click", region_clicked);
 
@@ -50,16 +50,19 @@ function create_map (error, json_reg) {
             translate = [width / 2 - scale * box_center_x, width / 2 - scale * box_center_y];
         d3.select(this).attr("class", "current_region");
         svg_map.selectAll(".regions").transition()
-            .duration(900)
-            .attr("transform", "translate(" + [width / 2, width / 1.71] + ")scale(0)");
+            .duration(700)
+            .attr("transform", "translate(" + [width / 2, width / 1.71] + ")scale(0)")
+            .remove();
+
         d3.select(this).transition()
-            .duration(900)//.ease(d)
+            .duration(700)//.ease(d)
             .style("stroke-width", 1.5 / scale + "px")
             .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
-        d3.selectAll("text").remove();
+        svg_map.selectAll("text").remove();
         d3.selectAll(".current_region")
             .on("mouseover", function (d) {
             });
+        draw_arrow(curr_region);
     }
 }
 

@@ -9,23 +9,23 @@
     <meta charset="UTF-8">
     <meta name="author" content="Francesca Sbolgi">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href='home_css.css'>
-
+    <link rel="stylesheet" href="Stylesheets/page_style.css">
+    <link rel="stylesheet" href="Stylesheets/elements_style.css">
 
 </head>
 
-<body bgcolor="#f7f6ee">
+<body>
     <div class="header">
-        <p>AGE DISTRIBUTION</p>
+        <p class="title">AGE DISTRIBUTION</p>
     </div>
 
     <!-- <script>window.onresize = function(){ location.reload(); } //refresh script on resize
     </script> -->
-
+    <p class="section">Select a place in the map to visualize the correspondent information.</p>
     <div class="middle">
         <div class="middle_left">
-            <div class="places_hierarchy">
-                <svg class="places_hierarchy_svg">
+            <div class="places_history">
+                <svg class="places_history_svg">
                     <marker id="arrow"
                             markerWidth="9"
                             markerHeight="13"
@@ -33,10 +33,10 @@
                             refX="13"
                             refY="0"
                             orient="auto">
-                        <path d="M0,-5L20,0L0,5" style="fill: #696630;"></path>
+                        <path d="M0,-5 L20,0L0,5" style="fill: #696630;"></path>
                     </marker>
                 </svg>
-                <script src="places_hierarchy.js"></script>
+                <script src="places_history.js"></script>
             </div>
             <div class="map">
                 <svg class="map_svg"></svg>
@@ -55,6 +55,8 @@
             </div>
         </div>
     </div>
+    <!-- <p class="section">Compare the data of two different places.</p> -->
+    <!-- <p class="section">Compare the age distribution with other variables.</p> -->
 </body>
 
 </html>

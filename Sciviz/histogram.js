@@ -18,7 +18,7 @@ var svg_histoB = d3.select(".histoB_svg");
          5) 1559 seleziona periodo, 1559 è il codice per 1982
     */
 
-d3.json("http://apistat.istat.it/?q=getdatajsonnuts&dataset=DCIS_POPRES1&dim=1,1,0,182,0,0&lang=0", function(e, d){
+d3.json("https://apistat.istat.it/?q=getdatajsonnuts&dataset=DCIS_POPRES1&dim=1,1,0,182,0,0&lang=0", function(e, d){
     console.log("api try");
     console.log(d);
 })

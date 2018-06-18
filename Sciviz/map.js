@@ -8,8 +8,6 @@ var size_svg = 550, // width = height of the map
     scale = size_svg * 5.2,
     translate = [size_svg / 2, size_svg / 1.2],
     previous_el = 0,
-    map_label_x = 0,
-    map_label_y = 0,
     first = true,
     mun_selected;
 
@@ -56,6 +54,12 @@ function create_map(error, json_el) {
         })
         .attr("d", path_map);
 
+    // bouding box reg con prov
+
+    var box_width, box_height, box_center_x, box_center_y;
+    [box_width, box_height, box_center_x, box_center_y] = compute_bounding_box(curr_el);
+    console.log(box_center_x);
+
     if (first) {
         curr_el.style("opacity", 0);
 
@@ -75,7 +79,10 @@ function create_map(error, json_el) {
             .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
         el_clickable = true;
     }
-    curr_el.on("mouseover", map_hovered)
+    curr_el.on("mouseover", function () {
+        d3.select(this).style("opacity", 1);
+        tooltip_map.style("visibility", "visible");
+        })
         .on("mouseout", function () { // remove the name when hovering out of a region
             if (mun_selected != this) {
                 d3.select(this).style("opacity", .7);
@@ -91,18 +98,6 @@ function create_map(error, json_el) {
         .on("click", map_clicked); // call function when click on a region
 }
 
-function map_hovered(curr_el) {// when hovering over a region show the name
-    if (level == 0) {
-        map_label_x = path_map.centroid(curr_el)[0];
-        map_label_y = path_map.bounds(curr_el)[0][1] - 4;
-    } else {
-        map_label_x = map_label_position(curr_el)[0];
-        map_label_y = map_label_position(curr_el)[1];
-    }
-    d3.select(this).style("opacity", 1);
-    tooltip_map.style("visibility", "visible");
-}
-
 function map_clicked(curr_el) {
     if (!el_clickable) { // check if a region is already selected
         return;
@@ -110,9 +105,15 @@ function map_clicked(curr_el) {
     el_clickable = false; // avoid multiple selection
     draw_arrow(curr_el, level); // call function in places_history.js to insert arrow and region name
 
+    console.log(extract_properties(curr_el));
+    var box_width, box_height, box_center_x, box_center_y;
+    [box_width, box_height, box_center_x, box_center_y] = compute_bounding_box(curr_el);
+    console.log(box_center_x);
+
+
     // update the histogram
     year_modification = false;
-    var el_name = extract_properties(curr_el)[0];
+    var el_name = extract_properties(curr_el)[0].toUpperCase();
     if (level == 2) {
         var url = "Data/Male/" + el_name + "_mun.csv";
         var http = new XMLHttpRequest();

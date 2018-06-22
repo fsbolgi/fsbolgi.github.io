@@ -1,30 +1,24 @@
-function insert_info_tooltip (svg, info_text) {
-    var info_tool = d3.select("body")
-        .append("div")
-        .attr("class", "tooltip")
-        .style("position", "absolute")
-        .style("z-index", "10")
-        .style("visibility", "hidden");
+function insert_info_tooltip() {
 
-    svg.append("text")
+    svgB_header.append("text") // draw the icon
         .text("i")
         .attr("fill", "#f7f6ee")
-        .attr("dx", 28)
-        .attr("dy", 14)
+        .attr("dx", 550)
+        .attr("dy", 52)
         .attr("class", "info_i");
-    svg.append("circle")
-        .attr("cx", 30)
-        .attr("cy", 10)
+    svgB_header.append("circle")
+        .attr("cx", 553)
+        .attr("cy", 45)
         .attr("class", "info_button")
-        .on('mouseover', function (d) {
-            info_tool.style("visibility", "visible");
-        })
-        .on('mouseout', function (d) {
-            info_tool.style("visibility", "hidden");
-        })
-        .on("mousemove", function (d, i) {
-            info_tool.style("top", (event.pageY - 15) + "px")
-                .style("left", (event.pageX + 17) + "px")
-                .html(info_text);
+        .on("click", function () {
+            on();
         });
+}
+
+function on() { // make overlay appear
+    document.getElementById("overlay").style.display = "block";
+}
+
+function off() { // remove overlay
+    document.getElementById("overlay").style.display = "none";
 }

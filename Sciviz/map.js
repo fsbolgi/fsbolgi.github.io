@@ -1,5 +1,5 @@
 var size_svg = 550, // width = height of the map
-    svg_map = d3.select(".map_svg"), // select correct svg
+    svg_map = d3.select(".map_svg"),
     level = 0,
     el_CODE = 0,
     el_clickable = true,
@@ -47,20 +47,14 @@ function create_map(error, json_el) {
 
     var curr_el = g.selectAll(array_names[level]) // insert the map with the next level of detail in the svg
         .data(element.features) // loop for each region
-        .enter() // what to do on opening
+        .enter()
         .append("path")
         .attr("class", function (d) {
-            return array_names[level] + " " + d.id;
+            return array_names[level];
         })
         .attr("d", path_map);
 
-    // bouding box reg con prov
-
-    var box_width, box_height, box_center_x, box_center_y;
-    [box_width, box_height, box_center_x, box_center_y] = compute_bounding_box(curr_el);
-    console.log(box_center_x);
-
-    if (first) {
+    if (first) { // transition to let italy appear
         curr_el.style("opacity", 0);
 
         curr_el.transition().delay(400)
@@ -69,21 +63,25 @@ function create_map(error, json_el) {
         first = false;
     }
 
-    if (level != 0) {
-        d3.select(this).remove(); // remove selected region
+    if (level > 0) { //zoom and center the element selected
+        if (level > 1) { // perform a multiple zoom if it's a province
+            curr_el.style("stroke-width", 1.5 / scale + "px")
+                .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+        }
         scale = scale_map();
         translate = translate_map();
-        curr_el.transition() // zooms on the region selected
+        curr_el.transition()
             .duration(1200)
             .style("stroke-width", 1.5 / scale + "px")
             .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
-        el_clickable = true;
     }
+    el_clickable = true;
+
     curr_el.on("mouseover", function () {
         d3.select(this).style("opacity", 1);
         tooltip_map.style("visibility", "visible");
-        })
-        .on("mouseout", function () { // remove the name when hovering out of a region
+    })
+        .on("mouseout", function () {
             if (mun_selected != this) {
                 d3.select(this).style("opacity", .7);
             }
@@ -92,7 +90,7 @@ function create_map(error, json_el) {
         .on("mousemove", function (d, i) {
             tooltip_map.style("top", (event.pageY - 15) + "px")
                 .style("left", (event.pageX + 17) + "px")
-                .style("font-size", 15+"px")
+                .style("font-size", 14 + "px")
                 .html((extract_properties(d)[0]).toUpperCase());
         })
         .on("click", map_clicked); // call function when click on a region
@@ -103,78 +101,31 @@ function map_clicked(curr_el) {
         return;
     }
     el_clickable = false; // avoid multiple selection
-    draw_arrow(curr_el, level); // call function in places_history.js to insert arrow and region name
-
-    console.log(extract_properties(curr_el));
-    var box_width, box_height, box_center_x, box_center_y;
-    [box_width, box_height, box_center_x, box_center_y] = compute_bounding_box(curr_el);
-    console.log(box_center_x);
-
+    write_next_place(curr_el, level); // call function in little_charts.js to insert arrow and region name
 
     // update the histogram
-    year_modification = false;
-    var el_name = extract_properties(curr_el)[0].toUpperCase();
-    if (level == 2) {
-        var url = "Data/Male/" + el_name + "_mun.csv";
-        var http = new XMLHttpRequest();
-        http.open('HEAD', url, false);
-        http.send();
-        if(http.status!=404) {
-            el_name = el_name+"_mun";
-        }
-    }
-    var url = "Data/Male/" + el_name + ".csv";
-    var http = new XMLHttpRequest();
-    http.open('HEAD', url, false);
-    http.send();
-    if(http.status!=404) {
-        file_nameA = "Data/Male/" + el_name + ".csv";
-        file_nameB = "Data/Female/" + el_name + ".csv";
-        draw_histo(file_nameA, svg_histoA, "left");
-        draw_histo(file_nameB, svg_histoB, "right");
-    } else {
-        svg_map.append("text")
-            .text("DATA NOT FOUND")
-            .attr("transform", "translate(" + 170 + "," + 20 +")")
-            .attr("class", "data_not_found");
-    }
+    zoom_in_histo(curr_el);
 
+    if (level >= 1) { // for prov and mun disable past and future
+        disable_time_section(true);
+    }
 
     if (level == 2) {
         mun_selected = this;
         d3.select(this).style("opacity", 1);
         return;
     }
+
     g.selectAll("." + array_names[level]).transition() // shrink and then remove the other regions
         .duration(800)
         .style("opacity", 0)
         .remove();
 
-    if (level == 1) {
-        disable_time_section();
-        var box_width, box_height, box_center_x, box_center_y;
-        [box_width, box_height, box_center_x, box_center_y] = compute_bounding_box(curr_el);
-        //console.log(scale);
-        //console.log("box " + compute_bounding_box(curr_el));
-        //console.log((size_svg * scale - size_svg) - compute_bounding_box(previous_el)[2]);
-        translate = [scale*(size_svg / 2 - box_center_x), scale*(size_svg / 2 - box_center_y)];
-        scale = size_svg * scale_map() * 5.2;
-        //console.log(box_reg_x * scale);
-        //console.log((scale * size_svg - size_svg) / 2);
-
-        projection_map = d3.geo.albers() //projects spherical coordinate of italy to a plane
-            .rotate([347, 0])
-            .scale(scale)
-            .translate(translate);
-        path_map = d3.geo.path() //path takes the projection and formats it appropriately
-            .projection(projection_map);
-    }
-
     previous_el = curr_el;
     el_CODE = extract_properties(curr_el)[1];
     level = level + 1;
 
-    next_level();
+    next_level(); // restart drawing in the place clicked
 }
 
 
@@ -227,21 +178,10 @@ function translate_map() {
     return [size_svg / 2 - scale * box[2], size_svg / 2 - scale * box[3]];
 }
 
-function map_label_position(curr_el) {
-    var prov_x = path_map.centroid(curr_el)[0] - path_map.bounds(previous_el)[0][0],
-        prov_y = path_map.bounds(curr_el)[0][1] - path_map.bounds(previous_el)[0][1],
-        box = compute_bounding_box(previous_el),
-        rect_diff = Math.abs(box[0] - box[1]) / 2;
-
-    (box[0] > box[1]) ? prov_y = prov_y + rect_diff : prov_x = prov_x + rect_diff;
-
-    var x = prov_x * scale + 0.08 * size_svg / 2,
-        y = prov_y * scale + 0.08 * size_svg / 2 - 4;
-    return [x, y];
-}
-
 function zoom_out() {
-    remove_level();
+    svgA_header.selectAll(".places_text").remove();
+    place_x = 80;
+
     if (level == 0) {
         return;
     }
@@ -252,26 +192,64 @@ function zoom_out() {
     draw_histo(file_nameA, svg_histoA, "left");
     draw_histo(file_nameB, svg_histoB, "right");
 
+    disable_time_section(false);
 
-    var prov_x = path_map.bounds(previous_el)[0][0] - 4,
-        prov_y = path_map.bounds(previous_el)[0][1] - 4,
+    svg_map.selectAll("text").remove();
+
+    var offset;
+    if (level == 1) {
+        offset = 4;
+    } else {
+        offset = 2;
+    }
+    var prov_x = path_map.bounds(previous_el)[0][0] - offset,
+        prov_y = path_map.bounds(previous_el)[0][1] - offset,
         box = compute_bounding_box(previous_el),
         rect_diff = Math.abs(box[0] - box[1]) / 2;
     (box[0] > box[1]) ? prov_y = prov_y - rect_diff : prov_x = prov_x - rect_diff;
 
     g.transition()
-        .duration(1000)
+        .duration(1200)
         .style("stroke-width", "1.5px")
         .attr("transform", "translate(" + [prov_x, prov_y] + ")scale(" + 1 / scale + ")")
         .each("end", next_level);
 
     g.selectAll(".provinces")
         .transition()
-        .duration(1050)
+        .duration(1250)
         .style("stroke-width", "0px")
         .remove();
+    g.selectAll(".municipalities")
+        .transition()
+        .duration(1250)
+        .style("stroke-width", "0px")
+        .remove();
+
     level = 0;
     el_CODE = 0;
     g = svg_map.append("g");
 }
 
+/*key = encodeURI("zoom");
+value = encodeURI("0");
+
+var kvp = document.location.search.substr(1).split('&');
+
+var i = kvp.length;
+var x;
+while (i--) {
+    x = kvp[i].split('=');
+
+    if (x[0] == key) {
+        x[1] = value;
+        kvp[i] = x.join('=');
+        break;
+    }
+}
+
+if (i < 0) {
+    kvp[kvp.length] = [key, value].join('=');
+}
+
+//this will reload the page, it's likely better to store this until finished
+//document.location.search = kvp.join('&');*/

@@ -210,15 +210,15 @@ function extract_properties(curr_el) {
     var nome, cod;
     switch (level) {
         case 0:
-            nome = curr_el.properties.NOME_REG;
+            nome = curr_el.properties.NOME_REG.toUpperCase();
             cod = curr_el.properties.COD_REG;
             break;
         case 1:
-            nome = curr_el.properties.NOME_PRO;
+            nome = curr_el.properties.NOME_PRO.toUpperCase();
             cod = curr_el.properties.COD_PRO;
             break;
         case 2:
-            nome = curr_el.properties.NOME_COM;
+            nome = curr_el.properties.NOME_COM.toUpperCase();
             cod = curr_el.properties.COD_COM;
             break;
     }

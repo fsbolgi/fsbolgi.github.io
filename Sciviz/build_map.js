@@ -16,14 +16,14 @@ function create_map(error, json_el) {
         return array_names[level];
     }).attr("d", path_map);
 
-    compute_mean(curr_el, element.features, 0);
+    compute_mean(curr_el, element.features);
 
     if (first) { // transition to let italy appear
         curr_el.style("opacity", 0);
 
         curr_el.transition().delay(400)
             .duration(1000)
-            .style("opacity", 0.7);
+            .style("opacity", 1);
         first = false;
     }
 
@@ -42,7 +42,7 @@ function create_map(error, json_el) {
     el_clickable = true;
 
     curr_el.on("mouseover", function (d) {
-        d3.select(this).style("opacity", 1);
+        d3.select(this).style("opacity", 0.5);
         tooltip_map.style("visibility", "visible");
         var place_name = extract_properties(d)[0].toUpperCase(); // show data on hover
         year_modification = false;
@@ -67,7 +67,7 @@ function create_map(error, json_el) {
             d3.selectAll(".rect_hover_histo_left").transition().duration(100).remove();
             d3.selectAll(".rect_hover_histo_right").transition().duration(100).remove();
             if (mun_selected != this) {
-                d3.select(this).style("opacity", .7);
+                d3.select(this).style("opacity", 1);
             }
             tooltip_map.style("visibility", "hidden");
         })

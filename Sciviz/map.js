@@ -14,7 +14,8 @@ var size_svg = 550, // width = height of the map
     do_it = false,
     mun_selected = 0,
     mean_array,
-    element;
+    element,
+    place_name = 0;
 
 var tooltip_map = d3.select("body")
     .append("div")
@@ -94,89 +95,79 @@ function map_clicked(curr_el) {
     next_level(); // restart drawing in the place clicked
 }
 
-function compute_mean(curr_place, obj_el, i) {
-    if (i == 0) {
-        mean_array = new Array(obj_el.length);
-    }
-    var name_place = extract_properties(obj_el[i])[0];
+function compute_mean(curr_place, obj_el) {
 
+    mean_array = new Array(obj_el.length);
     var y = col_name.substring(2, col_name.length);
 
-    if (level > 0 && (y <1982 || y>2017)) {
-        var c = (y < 1982)? "orange": "blue";
-        for (j = 0; j< curr_place[0].length; j++){
-            (curr_place[0][j]).style.setProperty("fill", c);
-        }
-    } else {
-        if (name_place.indexOf("/") != -1) {
-            name_place = name_place.substring(0, name_place.indexOf("/")).trim();
-        }
-        if (level == 2) { // if there's a mun with the same name of a province
-            name_place = name_place + "_mun";
-        }
-        var url = "Data/Male/" + name_place + ".csv"; // check if
-        var http = new XMLHttpRequest();
-        http.open('HEAD', url, false);
-        http.send();
-        if (http.status != 404) {
+    mean_file = (level == 2) ? "Data/transposeF_mun.csv" : "Data/transposeF.csv";
+    d3.csv(mean_file, function (error, data) {
 
-            d3.csv("Data/Male/" + name_place + ".csv", type, function (error, dataM) {
+        for (i = 0; i < obj_el.length; i++) {
+            place_name = extract_properties(obj_el[i])[0];
+            if (place_name.indexOf("/") != -1) {
+                place_name = place_name.substring(0, place_name.indexOf("/")).trim();
+            }
+            if (level == 1) {
+                if (y >= 1982 && y <= 2017) {
+                    mean_array[i] = data[y - 30 - base][place_name];
+                } else {
+                    mean_array[i] = 0;
+                }
+            } else {
+                mean_array[i] = data[y - base][place_name];
+            }
+        }
 
-                var tot_popM = d3.sum(dataM, function (d) {
-                    return d.value;
+        mean_file = (level == 2) ? "Data/transposeM_mun.csv" : "Data/transposeM.csv";
+        d3.csv(mean_file, function (error, data) {
+
+            for (i = 0; i < obj_el.length; i++) {
+                place_name = extract_properties(obj_el[i])[0];
+                if (place_name.indexOf("/") != -1) {
+                    place_name = place_name.substring(0, place_name.indexOf("/")).trim();
+                }
+                if (level == 1) {
+                    if (y >= 1982 && y <= 2017) {
+                        mean_array[i] = data[y - 30 - base][place_name];
+                    } else {
+                        mean_array[i] = 0;
+                    }
+                } else {
+                    mean_array[i] = data[y - base][place_name];
+                }
+            }
+
+            if (level > 0 && (y < 1982 || y > 2017)) {
+                for (j = 0; j < curr_place[0].length; j++) {
+                    (curr_place[0][j]).style.setProperty("fill", "#a6f2cc");
+                }
+            } else {
+                var min, max;
+                [min, max] = d3.extent(mean_array, function (d) {
+                    return d;
                 });
 
-                var mean_pop_M = compute_mean_age(dataM, tot_popM);
+                var map_color_scale = d3.scale.linear();
+                map_color_scale.domain([min, max]).interpolate(d3.interpolateHcl);
 
-                d3.csv("Data/Female/" + name_place + ".csv", type, function (error, dataF) {
-
-
-                    var tot_popF = d3.sum(dataF, function (d) {
-                        return d.value;
-                    });
-
-
-                    var mean_pop_F = compute_mean_age(dataF, tot_popF);
-
-
-                    mean_array[i] = (mean_pop_M + mean_pop_F) / 2;
-
-                    if ((i + 1) == curr_place[0].length) {
-
-                        var min, max;
-                        [min, max] = d3.extent(mean_array, function (d) {
-                            return d;
-                        });
-
-                        var map_color_scale = d3.scale.linear();
-                        map_color_scale.domain([min, max]).interpolate(d3.interpolateHcl);
-
-                        if (y < 1982) {
-                            map_color_scale.range([d3.rgb("#ffcc00"), d3.rgb('#b30000')]);
-                        } else if (y > 2017) {
-                            map_color_scale.range([d3.rgb("#99ccff"), d3.rgb('#000099')]);
-                        } else {
-                            map_color_scale.range([d3.rgb("#99ff33"), d3.rgb('#006600')]);
-                        }
-                        for (j = 0; j < curr_place[0].length; j++) {
-                            if (mean_array[j] == null) {
-                                (curr_place[0][j]).style.setProperty("fill", "white");
-                            } else {
-                                (curr_place[0][j]).style.setProperty("fill", map_color_scale(mean_array[j]));
-
-                            }
-                        }
+                if (y < 1982) {
+                    map_color_scale.range([d3.rgb("#ffdd65"), d3.rgb('#c16000')]);
+                } else if (y > 2017) {
+                    map_color_scale.range([d3.rgb("#96e5ea"), d3.rgb('#1f4d5b')]);
+                } else {
+                    map_color_scale.range([d3.rgb("#7ee3ab"), d3.rgb('#0e412a')]);
+                }
+                for (j = 0; j < curr_place[0].length; j++) {
+                    if (mean_array[j] >0) {
+                        (curr_place[0][j]).style.setProperty("fill", map_color_scale(mean_array[j]));
+                    } else {
+                        (curr_place[0][j]).style.setProperty("fill", "#e0e0d1");
                     }
-                    if ((i + 1) < curr_place[0].length) {
-                        compute_mean(curr_place, obj_el, i + 1);
-                    }
-                });
-
-            });
-        } else {
-            compute_mean(curr_place, obj_el, i + 1);
-        }
-    }
+                }
+            }
+        });
+    });
 }
 
 function zoom_out(level_clicked) {

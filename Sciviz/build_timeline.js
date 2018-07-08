@@ -35,7 +35,7 @@ function draw_epoc() {
         .attr("dx", 90)
         .attr("dy", 10)
         .attr("class", "epoc_label")
-        .attr("fill", "orange");
+        .attr("fill", "#f3b748");
     past.transition()
         .delay(800)
         .duration(1000)
@@ -46,7 +46,7 @@ function draw_epoc() {
         .attr("dx", 230)
         .attr("dy", 10)
         .attr("class", "epoc_label")
-        .attr("fill", "green")
+        .attr("fill", "#62cc9a")
         .transition()
         .delay(1100)
         .duration(1000)
@@ -57,7 +57,7 @@ function draw_epoc() {
         .attr("dx", 440)
         .attr("dy", 10)
         .attr("class", "epoc_label")
-        .attr("fill", "blue");
+        .attr("fill", "#388393");
     future.transition()
         .delay(1350)
         .duration(1000)

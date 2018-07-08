@@ -50,7 +50,7 @@ function dragged() {
     move_index_n_births(curr_year);
 
     set_col_name("A_" + curr_year);
-    compute_mean(curr_el, element.features, 0);
+    compute_mean(curr_el, element.features);
 
     draw_histo(file_nameA, svg_histoA, "left");
     draw_histo(file_nameB, svg_histoB, "right");

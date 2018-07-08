@@ -129,7 +129,7 @@
 .regions, .provinces, .municipalities{
     fill: #f7f6ee;
     stroke: #FFFFFF;
-    opacity: 0.7;
+    opacity: 1;
     cursor: pointer;
 }
 .regions_label,.provinces_label, .municipalities_label{
@@ -199,7 +199,7 @@
     z-index: 1;
 }
 .rect_histo_right {
-    fill: pink;
+    fill: #fbccbf;
     opacity: 0.7;
     stroke: #FFFFFF;
     stroke-width: 0.8px;
@@ -207,7 +207,7 @@
     z-index: 1;
 }
 .rect_hover_histo_left {
-    fill: #2b506e;
+    fill: #396a93;
     opacity: 0.7;
     stroke: #FFFFFF;
     stroke-width: 0.8px;
@@ -215,7 +215,7 @@
     z-index: 1;
 }
 .rect_hover_histo_right{
-    fill: #ff6680;
+    fill: #fa9d91;
     opacity: 0.7;
     stroke: #FFFFFF;
     stroke-width: 0.8px;

@@ -27,9 +27,9 @@ function easter() {
     var img_glasses = svg_lj.append('svg:image')
         .attr("xlink:href", "Images/glasses.png")
         .attr("class", "bocelli")
-        .attr("x", 950)
+        .attr("x", 940)
         .attr("y", 50)
-        .attr("width", 180)
+        .attr("width", 190)
         .attr("height", 180);
     mySound = new sound("song.mp3");
     mySound.play();

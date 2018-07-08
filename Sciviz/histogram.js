@@ -110,7 +110,11 @@ function draw_rectangles(svg_histo, pos, data_grouped, mean, xScale, bar_height,
         })
         .style("fill", function (d, i) {
             if (i == mean) {
-                return (pos == "left") ? "#265073" : "#f98699";
+                if (class_r.substring(5,10) == "hover") {
+                    return (pos == "left") ? "#152837" : "#e67364";
+                } else {
+                    return (pos == "left") ? "#265073" : "#f07e6f";
+                }
             }
         })
         .attr("width", function (d) {

@@ -46,7 +46,7 @@ var g = svg_map.append("g");
 next_level(); // draw another level of detail
 
 function map_clicked(curr_el) {
-    if (!el_clickable) { // check if a region is already selected
+    if (!el_clickable || is_place_missing(extract_properties(curr_el)[0])) { // check if a region is already selected
         return;
     }
     el_clickable = false; // avoid multiple selection
@@ -67,13 +67,13 @@ function map_clicked(curr_el) {
             easter();
         }
         if (mun_selected != 0) {
-            d3.select(mun_selected).style("opacity", 0.7);
+            d3.select(mun_selected).style("opacity", 1);
             d3.selectAll("#places_text_3")
                 .transition().duration(1200).style("opacity", 0).remove();
         }
         write_next_place(curr_el, level); // call function in header to insert arrow and region name
         mun_selected = this;
-        d3.select(this).style("opacity", 1);
+        d3.select(this).style("opacity", 0.5);
         el_clickable = true; // avoid multiple selection
         return;
     }
@@ -220,8 +220,6 @@ function zoom_out(level_clicked) {
     draw_tot_pop();
     draw_n_births();
     disable_time_section(false);
-
-    d3.selectAll(".data_not_found").remove();
 
     if (level_clicked == 0) { // zoom to italy
         place_x = 65;

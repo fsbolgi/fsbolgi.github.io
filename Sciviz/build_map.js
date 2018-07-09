@@ -48,7 +48,11 @@ function create_map(error, json_el) {
         tooltip_map.style("visibility", "visible");
         var place_name = extract_properties(d)[0].toUpperCase(); // show data on hover
         year_modification = false;
-        if (mun_selected != 0 || is_place_missing(place_name)) {
+        if (is_place_missing(place_name)) {
+            d3.select(this).style("cursor", "auto");
+            return;
+        }
+        if (mun_selected != 0) {
             return;
         }
         if (level == 2) { // if there's a mun with the same name of a province

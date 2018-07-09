@@ -178,13 +178,6 @@ function zoom_in_histo(curr_el) {
     if (el_name.indexOf("/") != -1) {
         el_name = el_name.substring(0, el_name.indexOf("/")).trim();
     }
-    if (is_place_missing(el_name)) {
-        svg_map.append("text")
-            .text("DATA NOT FOUND")
-            .attr("transform", "translate(" + 170 + "," + 20 + ")")
-            .attr("class", "data_not_found");
-        return;
-    }
     if (level == 2) { // if there's a mun with the same name of a province
         el_name = el_name + "_mun";
     }

@@ -1,3 +1,5 @@
+var timer;
+
 function draw_years_rect() {
     time_line = svg_time.selectAll("rect") // draw a rectangle for each year
         .data(ages_array)
@@ -27,6 +29,10 @@ function draw_years_rect() {
                 return color_scale[i];
             }
         });
+
+    time_line.on("click", function () {
+       console.log(this)
+    });
 }
 
 function draw_epoc() {
@@ -90,6 +96,47 @@ function draw_years_label() {
             return 1000 + i * 9;
         })
         .style("opacity", 1);
+
+    var xScale = d3.scale.linear()
+        .domain([0, 20])
+        .range([0, 45]);
+
+    var yScale = d3.scale.linear()
+        .domain([0, 20])
+        .range([22, 57]);
+
+
+    var trianglePoints = xScale(3) + ' ' + yScale(15) + ', ' + xScale(3) + ' ' + yScale(5) + ', ' + xScale(9) + ' ' + yScale(10) + ' ' + xScale(9) + ', ' + yScale(10) + ' ' + xScale(3) + ' ' + yScale(15);
+
+    var play = svg_time.append('polyline')
+        .attr('points', trianglePoints)
+        .attr("class", "play");
+    play.transition().delay(1000).duration(1000).style("opacity", 1);
+    play.on("click", function () {
+            timer = setInterval(function () {
+                play_timeline();
+            }, 5*50);
+        });
+}
+
+function play_timeline() {
+    var pos = document.getElementById("div_cursor").style.left;
+    pos = Number(pos.substring(0, pos.length - 2));
+    var movement = line_width / n_ages;
+    year_modification = true;
+    if ((pos + movement) < points[1][0] - 16) {
+        div_cursor.style('left', (pos + movement) + "px");
+        var year = Number(text_cursor[0][0].textContent) + 1;
+        move_index_tot_pop(year);
+        move_index_n_births(year);
+        text_cursor.text(year);
+        set_col_name("A_" + year);
+        compute_mean(curr_el, element.features);
+        draw_histo(file_nameA, svg_histoA, "left");
+        draw_histo(file_nameB, svg_histoB, "right");
+    } else {
+        clearInterval(timer);
+    }
 }
 
 function draw_cursor() {

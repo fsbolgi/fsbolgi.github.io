@@ -1,3 +1,5 @@
+var curr_epoc = "PRESENT";
+
 function next_level() {
     var file_json = "Maps/" + el_CODE + "_" + array_json[level] + "Topo.json"; // name of the file json
 
@@ -46,17 +48,11 @@ function create_map(error, json_el) {
         tooltip_map.style("visibility", "visible");
         var place_name = extract_properties(d)[0].toUpperCase(); // show data on hover
         year_modification = false;
-        if (mun_selected != 0) {
+        if (mun_selected != 0 || is_place_missing(place_name)) {
             return;
         }
         if (level == 2) { // if there's a mun with the same name of a province
-            var url = "Data/Male/" + place_name + "_mun.csv";
-            var http = new XMLHttpRequest();
-            http.open('HEAD', url, false);
-            http.send();
-            if (http.status != 404) {
-                place_name = place_name + "_mun";
-            }
+            place_name = place_name + "_mun";
         }
         var file_nameA = "Data/Male/" + place_name + ".csv";
         var file_nameB = "Data/Female/" + place_name + ".csv";
@@ -78,4 +74,88 @@ function create_map(error, json_el) {
                 .html((extract_properties(d)[0]).toUpperCase());
         })
         .on("click", map_clicked); // call function when click on a region
+}
+
+function create_legend() {
+
+    svg_map.append("text") // insert grouping label
+        .text("AVERAGE AGE")
+        .attr("dx", 45)
+        .attr("dy", 550)
+        .attr("class", "info_text")
+        .transition().delay(1000).duration(1000).style("opacity", 1); // on enter label transition
+
+    svg_map.append("svg:image")
+        .attr("xlink:href", "Images/PRESENT.png")
+        .attr("class", "image")
+        .attr("x", 50)
+        .attr("y", 560)
+        .attr("width", 130)
+        .attr("height", 15)
+        .transition().delay(1000).duration(100).style("opacity", 1);
+
+    var min_age = svg_map.append("text") // insert grouping label
+        .attr("dx", 45)
+        .attr("dy", 590)
+        .attr("class", "info_text")
+        .attr("id", "legend_min")
+        .style("font-size", 11 + "px");
+    min_age.transition().delay(500).duration(1000)
+        .text(function () {
+            return 30;
+        })
+        .style("opacity", 1);
+
+    var avg_age = svg_map.append("text") // insert grouping label
+        .attr("dx", 105)
+        .attr("dy", 590)
+        .attr("class", "info_text")
+        .attr("id", "legend_avg")
+        .style("font-size", 11 + "px");
+    avg_age.transition().delay(500).duration(1000)
+        .text(function () {
+            return 34.5;
+        })
+        .style("opacity", 1);
+
+    var max_age = svg_map.append("text") // insert grouping label
+        .attr("dx", 170)
+        .attr("dy", 590)
+        .attr("class", "info_text")
+        .attr("id", "legend_max")
+        .style("font-size", 11 + "px");
+    max_age.transition().delay(500).duration(1000)
+        .text(function () {
+            return 39;
+        })
+        .style("opacity", 1);
+}
+
+function update_legend(min, max, year) {
+    var avg = (Number(min) + Number(max)) / 2;
+    svg_map.select("#legend_min").text(min);
+    svg_map.select("#legend_avg").text(avg);
+    svg_map.select("#legend_max").text(max);
+
+    var epoc;
+    if (year < 1982) {
+        epoc = "PAST";
+    } else if (year > 2017) {
+        epoc = "FUTURE";
+    } else {
+        epoc = "PRESENT";
+    }
+
+    if (epoc != curr_epoc) {
+        curr_epoc = epoc;
+        svg_map.selectAll(".image").remove();
+        svg_map.append("svg:image")
+            .attr("xlink:href", "Images/"+epoc+".png")
+            .attr("class", "image")
+            .attr("x", 50)
+            .attr("y", 560)
+            .attr("width", 130)
+            .attr("height", 15)
+            .style("opacity", 1);
+    }
 }

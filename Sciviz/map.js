@@ -6,7 +6,7 @@ var size_svg = 550, // width = height of the map
     array_json = ["reg", "prov", "mun"],
     array_names = ["regions", "provinces", "municipalities"],
     scale = size_svg * 5.2,
-    translate = [size_svg / 2, size_svg / 1.2],
+    translate = [size_svg / 2, size_svg / 1.25],
     previous_el = 0,
     reg_el = 0,
     scale_el = 0,
@@ -38,6 +38,8 @@ svg_map.append("rect")
     .on("click", function () {
         zoom_out(level - 1);
     });
+
+create_legend();
 
 var g = svg_map.append("g");
 
@@ -140,13 +142,19 @@ function compute_mean(curr_place, obj_el) {
 
             if (level > 0 && (y < 1982 || y > 2017)) {
                 for (j = 0; j < curr_place[0].length; j++) {
-                    (curr_place[0][j]).style.setProperty("fill", "#a6f2cc");
+                    if (y < 1982) {
+                        (curr_place[0][j]).style.setProperty("fill", "#f3b748");
+                    } else if (y > 2017) {
+                        (curr_place[0][j]).style.setProperty("fill", "#388393");
+                    }
                 }
             } else {
                 var min, max;
                 [min, max] = d3.extent(mean_array, function (d) {
                     return d;
                 });
+
+                update_legend(min, max, y);
 
                 var map_color_scale = d3.scale.linear();
                 map_color_scale.domain([min, max]).interpolate(d3.interpolateHcl);
@@ -162,7 +170,7 @@ function compute_mean(curr_place, obj_el) {
                     if (mean_array[j] >0) {
                         (curr_place[0][j]).style.setProperty("fill", map_color_scale(mean_array[j]));
                     } else {
-                        (curr_place[0][j]).style.setProperty("fill", "#e0e0d1");
+                        (curr_place[0][j]).style.setProperty("fill", "#cccccc");
                     }
                 }
             }
@@ -213,10 +221,10 @@ function zoom_out(level_clicked) {
     draw_n_births();
     disable_time_section(false);
 
-    svg_map.selectAll("text").remove();
+    d3.selectAll(".data_not_found").remove();
 
     if (level_clicked == 0) { // zoom to italy
-        place_x = 80;
+        place_x = 65;
 
         var prov_x = path_map.bounds(previous_el)[0][0] - offset,
             prov_y = path_map.bounds(previous_el)[0][1] - offset,

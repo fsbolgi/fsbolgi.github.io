@@ -98,13 +98,12 @@ function draw_years_label() {
         .style("opacity", 1);
 
     var xScale = d3.scale.linear()
-        .domain([0, 20])
-        .range([0, 45]);
+        .domain([3, 20])
+        .range([0, 25]);
 
     var yScale = d3.scale.linear()
         .domain([0, 20])
         .range([22, 57]);
-
 
     var trianglePoints = xScale(3) + ' ' + yScale(15) + ', ' + xScale(3) + ' ' + yScale(5) + ', ' + xScale(9) + ' ' + yScale(10) + ' ' + xScale(9) + ', ' + yScale(10) + ' ' + xScale(3) + ' ' + yScale(15);
 
@@ -117,6 +116,34 @@ function draw_years_label() {
                 play_timeline();
             }, 5*50);
         });
+
+    svg_time.append("line")
+        .attr("x1", 18)
+        .attr("y1", 33)
+        .attr("x2", 18)
+        .attr("y2", 48)
+        .attr("class", "pause")
+        .transition().delay(1000).duration(1000).style("opacity", 1);
+
+    svg_time.append("line")
+        .attr("x1", 23)
+        .attr("y1", 33)
+        .attr("x2", 23)
+        .attr("y2", 48)
+        .attr("class", "pause")
+        .transition().delay(1000).duration(1000).style("opacity", 1);
+
+    svg_time.append("rect")
+        .attr("x", 17)
+        .attr("y", 33)
+        .attr("width", 10)
+        .attr("height", 15)
+        .style("fill", "transparent")
+        .style("cursor", "pointer")
+        .on("click", function () {
+        clearInterval(timer)
+    });
+
 }
 
 function play_timeline() {

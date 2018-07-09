@@ -161,6 +161,12 @@
     cursor: pointer;
     opacity: 0;
 }
+.pause {
+    stroke: #595959;
+    stroke-width: 3px;
+    opacity: 0;
+    cursor: pointer;
+}
 .year_label{
     font-size: 7pt;
     font-family: sans-serif;

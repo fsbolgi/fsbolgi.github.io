@@ -1,4 +1,5 @@
-var timer;
+var timer,
+    timer_still = true;
 
 function draw_years_rect() {
     time_line = svg_time.selectAll("rect") // draw a rectangle for each year
@@ -31,7 +32,7 @@ function draw_years_rect() {
         });
 
     time_line.on("click", function () {
-       console.log(this)
+        console.log(this)
     });
 }
 
@@ -112,10 +113,13 @@ function draw_years_label() {
         .attr("class", "play");
     play.transition().delay(1000).duration(1000).style("opacity", 1);
     play.on("click", function () {
+        if (timer_still) {
+            timer_still = false;
             timer = setInterval(function () {
                 play_timeline();
-            }, 5*50);
-        });
+            }, 5 * 50);
+        }
+    });
 
     svg_time.append("line")
         .attr("x1", 18)
@@ -141,8 +145,9 @@ function draw_years_label() {
         .style("fill", "transparent")
         .style("cursor", "pointer")
         .on("click", function () {
-        clearInterval(timer)
-    });
+            clearInterval(timer);
+            timer_still = true;
+        });
 
 }
 
@@ -163,6 +168,7 @@ function play_timeline() {
         draw_histo(file_nameB, svg_histoB, "right");
     } else {
         clearInterval(timer);
+        timer_still = true;
     }
 }
 

@@ -59,8 +59,7 @@ Below there's a list of examples and tutorials I found useful to understand how 
 some functionalities of the project.
 * [topojson files](https://github.com/Dataninja/geo-shapes) -  A set of well formatted data 
 needed to draw the map.
-* [istat api](https://medium.com/@vincpatruno/come-accedere-ai-dati-statistici-pubblicati-dallistituto-nazionale-di-statistica-istat-ca874316f5a9) 
-- An automated way to retrieve or download the data from istat. 
+* [istat api](https://medium.com/@vincpatruno/come-accedere-ai-dati-statistici-pubblicati-dallistituto-nazionale-di-statistica-istat-ca874316f5a9) - An automated way to retrieve or download the data from istat. 
 * [draw a map](https://bost.ocks.org/mike/map/) - A simple tutorial on how to draw a map 
 using d3.js
 * [zoom to bounding box](https://bl.ocks.org/mbostock/4699541) - An example on how to zoom 
@@ -75,9 +74,6 @@ tooltip cointaing some information to the mouse position.
 ## License
 
 This project is licensed under the MIT License.
-
-The data used was taken from the istat database. 
-For the provinces and municipalities are available the data from 1982 to 2017, while for the regions it is also possible to see the reconstructed population from 1952 to 1981 and the forecasts until 2065.
 
 
 

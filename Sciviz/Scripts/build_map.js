@@ -1,4 +1,23 @@
-var curr_epoc = "PRESENT";
+var curr_epoc = "PRESENT",
+    mean_file_F = 0,
+    mean_file_M = 0,
+    mean_file_F_mun = 0,
+    mean_file_M_mun = 0;
+
+function retrieve_mean_files() {
+    d3.csv("Data/transposeF.csv", function (error, dataF) {
+        mean_file_F = dataF;
+    });
+    d3.csv("Data/transposeM.csv", function (error, dataM) {
+        mean_file_M = dataM;
+    });
+    d3.csv("Data/transposeF_mun.csv", function (error, dataF_mun) {
+        mean_file_F_mun = dataF_mun;
+    });
+    d3.csv("Data/transposeM_mun.csv", function (error, dataM_mun) {
+        mean_file_M_mun = dataM_mun;
+    });
+}
 
 function next_level() {
     var file_json = "Maps/" + el_CODE + "_" + array_json[level] + "Topo.json"; // name of the file json

@@ -40,10 +40,6 @@ function draw_histo(path_data, svg_histo, pos) {
         }
         draw_rectangles(svg_histo, pos, data_grouped, mean, xScale, bar_height, tot_pop, ("rect_histo_" + pos));
     });
-    if (level > 0) {
-        draw_skyline("Data/Male/ITALIA.csv", svg_histoA, "left");
-        draw_skyline("Data/Female/ITALIA.csv", svg_histoB, "right");
-    }
 }
 
 function compute_max(data) { // compute the max of the whole file
@@ -169,10 +165,6 @@ function compute_mean_age(data, tot_pop) {
 }
 
 function zoom_in_histo(curr_el) {
-    if (level >= 0) {
-        draw_skyline("Data/Male/ITALIA.csv", svg_histoA, "left");
-        draw_skyline("Data/Female/ITALIA.csv", svg_histoB, "right");
-    }
     year_modification = false;
     var el_name = extract_properties(curr_el)[0].toUpperCase();
     if (el_name.indexOf("/") != -1) {
@@ -213,47 +205,4 @@ function draw_hover_histo(path_data, svg_histo, pos) {
             }
         });
     }
-}
-
-function draw_skyline(prev_place, svg_histo, pos) {
-    /*d3.csv(prev_place, type, function (error, data) {
-
-        var data_grouped = compute_grouping(data);
-
-        var xScale = d3.scale.linear()
-            .domain([0, curr_max])
-            .range([0, width / 2 - 45]);
-
-        var skyline = d3.svg.line()
-            .x(function (d, i) {
-                if (pos == "left") {
-                    return (width / 2 - (xScale(d)));
-                } else {
-                    return 25 +xScale(d);
-                }
-            })
-            .y(function (d, i) {
-                return i * (height - 20) / data_grouped.length + 10;
-            });
-
-        if (do_twice >0) {
-            svg_histo.append("path")
-                .datum(data_grouped)
-                .attr("class", "skyline")
-                .style("stroke", function () {
-                    return (pos == "left") ? "#265073" : "#f98699";
-                })
-                .attr("d", skyline);
-            do_twice--;
-        }
-        skyline.x(function (d, i) {
-            if (pos == "left") {
-                console.log((width / 2 - (xScale(d))));
-                return (width / 2 - (xScale(d)));
-            } else {
-                return 25 +xScale(d);
-            }
-        });
-        svg_histo.selectAll(".skyline").transition().duration(1200).attr("d", skyline);
-    });*/
 }

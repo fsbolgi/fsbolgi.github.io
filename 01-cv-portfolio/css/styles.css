@@ -55,8 +55,10 @@ b.max-bold{ font-weight: 700; }
 
 .section .heading:before{ content:''; height: 10px; width: 50px; border-radius: 5px;
 	margin-bottom: 20px; display: block; background: #f3b748; }
-	
+
+.margin-t-7{ margin-top: 7px; }
 .margin-t-10{ margin-top: 10px; }
+.margin-t-15{ margin-top: 15px; }
 
 .margin-b-30{ margin-bottom: 30px; }
 .margin-b-50{ margin-bottom: 50px; }
@@ -67,7 +69,8 @@ b.max-bold{ font-weight: 700; }
 
 .font-semi-white{ color: #ddd; }
 
-.font-lite-black{ color: #ffdd65; }
+.font-lite-blue{ color: #ffdd65; }
+.font-lite-white{ color: #F7AC20; }
 
 
 /* ---------------------------------
@@ -95,11 +98,11 @@ header .downlad-btn:hover{ -webkit-transform: translateY(-4px); transform: trans
 4. INTRO SECTION
 --------------------------------- */
 
-.intro-section{ padding-top: 200px; position: relative; background-size: cover; 
+.intro-section{ padding-top: 200px; position: relative; background-size: cover;
 	z-index: 1;background-image: url(../../images/wallpaper.jpg); }
 
-.intro-section:before{ content:''; z-index: -1; position: absolute; top: 0; bottom: 0; left: 0; 
-	right: 0; background: rgba(0,0,0, .2); }
+.intro-section:before{ content:''; z-index: -1; position: absolute; top: 0; bottom: 0; left: 0;
+	right: 0; background: rgba(0,0,0, .03); }
 	
 .intro-section:after{ content: ''; position: absolute; bottom: 0; left: 0; right: 0;
 	height: 150px; z-index: -1; background: #fff; }
@@ -115,7 +118,7 @@ header .downlad-btn:hover{ -webkit-transform: translateY(-4px); transform: trans
 	overflow: hidden; z-index: 1; position: relative; margin: 0 5px 5px; background: #887392; color: #fff; }
 
 .intro .social-icons > li > a:after{ content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-	top: 0; z-index: -1; border-radius: 20px; background: #f3b748;
+	top: 0; z-index: -1; border-radius: 20px; background: #F7AC20;
 	-webkit-transition: all .2s ease; transition: all .2s ease;
 	-webkit-transform: scale(0); transform: scale(0); }
 
@@ -149,7 +152,7 @@ header .downlad-btn:hover{ -webkit-transform: translateY(-4px); transform: trans
 7. EXPERIENCE SECTION
 --------------------------------- */
 
-.experience-section{ background: #388393; color: #fff; }
+.blue-section{ background: #197A7F; color: #fff; }
 
 .experience .list > li{ display: block; position: relative; margin-bottom: 10px; padding-left: 20px; }
 
@@ -170,6 +173,13 @@ header .downlad-btn:hover{ -webkit-transform: translateY(-4px); transform: trans
 
 .education-wrapper .education:after{ content:''; position: absolute; top: 8px; left: -58px; width: 16px; 
 	height: 16px; border-radius: 10px; z-index: 1;
-	box-shadow: 0 0 0 8px rgba(255,171,0, .4); background: #f3b748; }
+	box-shadow: 0 0 0 8px rgba(255,171,0, .4); background: #F7AC20; }
+
+/* ---------------------------------
+9. FOOTER SECTION
+--------------------------------- */
+
+.copyright{ text-align: center; padding: 30px 0; background: #fff; }
+
 
 
